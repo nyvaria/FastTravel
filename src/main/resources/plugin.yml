@@ -1,0 +1,41 @@
+name: ${pom.name}
+version: ${pom.version}
+website: ${pom.url}
+author: captbunzo
+
+main: net.nyvaria.fasttravel.FastTravel
+
+commands:
+  teleport:
+    description: This is the teleport command.
+    usage: /<command> [player]
+  
+  summon:
+    description: This is the summon command.
+    usage: /<command> [player]
+  
+  clearrequests:
+    description: This is the clearrequests command.
+    usage: /<command> [player]
+    permission: <plugin name>.request.clearall
+    permission-message: You don't have <permission>
+
+permissions:
+  fasttravel.*:
+    description: Gives access to all FastTravel commands
+    children:
+      fasttravel.teleport:      true
+      fasttravel.summon:        true
+      fasttravel.clearrequests: true
+    
+  fasttravel.request.teleport:
+    description: Allows you to initiate a teleport request
+    default: op
+    
+  fasttravel.request.summon:
+    description: Allows you to initiate a summon request
+    default: op
+    
+  fasttravel.request.clearall:
+    description: Allows you to clear all existing requests
+    default: op
