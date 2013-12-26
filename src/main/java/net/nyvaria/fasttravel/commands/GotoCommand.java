@@ -3,6 +3,7 @@
  */
 package net.nyvaria.fasttravel.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.nyvaria.fasttravel.FastTravel;
@@ -11,13 +12,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 /**
  * @author Paul Thompson
  *
  */
-public class GotoCommand implements CommandExecutor {
+public class GotoCommand implements CommandExecutor, TabCompleter {
 	public static String CMD = "goto";
 	private final FastTravel plugin;
 	
@@ -25,6 +27,17 @@ public class GotoCommand implements CommandExecutor {
 		this.plugin = plugin;
 	}
 	
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+	    String targetedPlayerName = args[0];
+	    ArrayList<String> matchedPlayerNames = new ArrayList<String>();
+	    
+	    for (Player player : plugin.getServer().matchPlayer(targetedPlayerName)) {
+	    	matchedPlayerNames.add(player.getPlayerListName());
+	    }
+		
+		return matchedPlayerNames;
+	}
+
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// Make sure we have a Player
 		if ( !(sender instanceof Player) ) {
