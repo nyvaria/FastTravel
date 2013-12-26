@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.nyvaria</groupId>
 	<artifactId>FastTravel</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.00</version>
 	<name>FastTravel</name>
 	<url>https://github.com/nyvaria/FastTravel</url>
 	<description>A fast travel plugin for Bukkit.</description>
@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.6.4-R2.0</version>
+			<version>1.7.2-R0.2</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

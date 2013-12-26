@@ -27,7 +27,7 @@ public class ClearRequestsCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// Make sure we have a Player
 		if ( !(sender instanceof Player) ) {
-			sender.sendMessage("You must be a player to use /" + TeleportCommand.CMD);
+			sender.sendMessage("You must be a player to use /" + ClearRequestsCommand.CMD);
 			return false;
 		}
 		
@@ -42,7 +42,7 @@ public class ClearRequestsCommand implements CommandExecutor {
 	    if (cmd.getPermissionMessage() != null) {
 	    	player.sendMessage(cmd.getPermissionMessage());
 	    } else {
-		    player.sendMessage(ChatColor.RED + "You are not allowed to clear your teleport and summon requests");
+		    player.sendMessage(ChatColor.RED + "You are not allowed to clear your goto and call requests");
 	    }
 	    
 	    return false;

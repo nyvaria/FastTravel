@@ -17,18 +17,18 @@ import org.bukkit.entity.Player;
  * @author Paul Thompson
  *
  */
-public class TeleportCommand implements CommandExecutor {
-	public static String CMD = "teleport";
+public class GotoCommand implements CommandExecutor {
+	public static String CMD = "goto";
 	private final FastTravel plugin;
 	
-	public TeleportCommand(FastTravel plugin) {
+	public GotoCommand(FastTravel plugin) {
 		this.plugin = plugin;
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// Make sure we have a Player
 		if ( !(sender instanceof Player) ) {
-			sender.sendMessage("You must be a player to use /" + TeleportCommand.CMD);
+			sender.sendMessage("You must be a player to use /" + GotoCommand.CMD);
 			return false;
 		}
 		
@@ -52,16 +52,16 @@ public class TeleportCommand implements CommandExecutor {
 	    }
 	    
 	    Player targetedPlayer = matchedPlayers.get(0);
-	    if (this.plugin.travelerList.get(targetedPlayer).acceptSummon(player)) {
+	    if (this.plugin.travelerList.get(targetedPlayer).acceptCall(player)) {
 	    	return true;
 	    }
 	    
-	    if (player.hasPermission(FastTravel.PERM_REQ_TELEPORT)) {
-	    	this.plugin.travelerList.get(player).requestTeleport(targetedPlayer);
+	    if (player.hasPermission(FastTravel.PERM_REQ_GOTO)) {
+	    	this.plugin.travelerList.get(player).requestGoto(targetedPlayer);
 	    	return true;
 	    }
 	    
-	    player.sendMessage(ChatColor.RED + "You are not allowed to request teleport to another player");
+	    player.sendMessage(ChatColor.RED + "You are not allowed to request to goto another player");
 	    return false;
 	}
 

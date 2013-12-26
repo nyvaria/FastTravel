@@ -7,8 +7,8 @@ package net.nyvaria.fasttravel.traveler;
 import java.util.Date;
 import java.util.HashMap;
 
-import net.nyvaria.fasttravel.commands.SummonCommand;
-import net.nyvaria.fasttravel.commands.TeleportCommand;
+import net.nyvaria.fasttravel.commands.CallCommand;
+import net.nyvaria.fasttravel.commands.GotoCommand;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,43 +19,43 @@ import org.bukkit.entity.Player;
  */
 public class Traveler {
 	private final Player player;
-	private HashMap<String, Date> teleportRequests = new HashMap<String, Date>();
-	private HashMap<String, Date> summonRequests   = new HashMap<String, Date>();
+	private HashMap<String, Date> gotoRequests = new HashMap<String, Date>();
+	private HashMap<String, Date> callRequests = new HashMap<String, Date>();
 	
 	public Traveler(Player player) {
 		this.player = player;
 	}
 	
-	public void requestTeleport(Player targetedPlayer) {
-		if (this.teleportRequests.containsKey(targetedPlayer.getName())) {
-			this.player.sendMessage(ChatColor.YELLOW + "Teleport request already sent to " + targetedPlayer.getName());
-			this.player.sendMessage(ChatColor.YELLOW + "That player must type " + ChatColor.WHITE + "/" + SummonCommand.CMD + " " + this.player.getName());
+	public void requestGoto(Player targetedPlayer) {
+		if (this.gotoRequests.containsKey(targetedPlayer.getName())) {
+			this.player.sendMessage(ChatColor.YELLOW + "Goto request already sent to " + targetedPlayer.getName());
+			this.player.sendMessage(ChatColor.YELLOW + "That player must type " + ChatColor.WHITE + "/" + CallCommand.CMD + " " + this.player.getName());
 		} else {
-			this.teleportRequests.put(targetedPlayer.getName(), new Date());
-			targetedPlayer.sendMessage(ChatColor.YELLOW + this.player.getName() + " would like to teleport to you.");
-			targetedPlayer.sendMessage(ChatColor.YELLOW + "Type " + ChatColor.WHITE + "/" + SummonCommand.CMD + " " + this.player.getName() + ChatColor.YELLOW + " to accept.");
-			this.player.sendMessage(ChatColor.YELLOW + "Teleport request sent to " + targetedPlayer.getName());
+			this.gotoRequests.put(targetedPlayer.getName(), new Date());
+			targetedPlayer.sendMessage(ChatColor.YELLOW + this.player.getName() + " would like to come to you.");
+			targetedPlayer.sendMessage(ChatColor.YELLOW + "Type " + ChatColor.WHITE + "/" + CallCommand.CMD + " " + this.player.getName() + ChatColor.YELLOW + " to accept.");
+			this.player.sendMessage(ChatColor.YELLOW + "Goto request sent to " + targetedPlayer.getName());
 		}
 	}
 	
-	public void requestSummon(Player summonedPlayer) {
-		if (this.summonRequests.containsKey(summonedPlayer.getName())) {
-			this.player.sendMessage(ChatColor.YELLOW + "Summon request already sent to " + summonedPlayer.getName());
-			this.player.sendMessage(ChatColor.YELLOW + "That player must type " + ChatColor.WHITE + "/" + TeleportCommand.CMD + " " + this.player.getName());
+	public void requestCall(Player calledPlayer) {
+		if (this.callRequests.containsKey(calledPlayer.getName())) {
+			this.player.sendMessage(ChatColor.YELLOW + "Call request already sent to " + calledPlayer.getName());
+			this.player.sendMessage(ChatColor.YELLOW + "That player must type " + ChatColor.WHITE + "/" + GotoCommand.CMD + " " + this.player.getName());
 		} else {
-			this.summonRequests.put(summonedPlayer.getName(), new Date());
-			summonedPlayer.sendMessage(ChatColor.YELLOW + this.player.getName() + " would like to summon you.");
-			summonedPlayer.sendMessage(ChatColor.YELLOW + "Type " + ChatColor.WHITE + "/" + TeleportCommand.CMD + " " + this.player.getName() + ChatColor.YELLOW + " to accept.");
-			this.player.sendMessage(ChatColor.YELLOW + "Summon request sent to " + summonedPlayer.getName());
+			this.callRequests.put(calledPlayer.getName(), new Date());
+			calledPlayer.sendMessage(ChatColor.YELLOW + this.player.getName() + " would like you to come to them.");
+			calledPlayer.sendMessage(ChatColor.YELLOW + "Type " + ChatColor.WHITE + "/" + GotoCommand.CMD + " " + this.player.getName() + ChatColor.YELLOW + " to accept.");
+			this.player.sendMessage(ChatColor.YELLOW + "Call request sent to " + calledPlayer.getName());
 		}
 	}
 	
-	public boolean acceptTeleport(Player targetedPlayer) {
-	    Date requestDate = this.teleportRequests.remove(targetedPlayer.getName());
+	public boolean acceptGoto(Player targetedPlayer) {
+	    Date requestDate = this.gotoRequests.remove(targetedPlayer.getName());
 	    
 	    if (requestDate != null) {
-	    	targetedPlayer.sendMessage(ChatColor.YELLOW + "Accepted teleport request from " + this.player.getName() + ".");
-	    	this.player.sendMessage(ChatColor.YELLOW + targetedPlayer.getName() + " accepted your teleport request.");
+	    	targetedPlayer.sendMessage(ChatColor.YELLOW + "Accepted goto request from " + this.player.getName() + ".");
+	    	this.player.sendMessage(ChatColor.YELLOW + targetedPlayer.getName() + " accepted your goto request.");
 	    	this.player.teleport(targetedPlayer);
 	    	return true;
 	    }
@@ -63,13 +63,13 @@ public class Traveler {
 	    return false;
 	}
 	
-	public boolean acceptSummon(Player summonedPlayer) {
-		Date requestDate = this.summonRequests.remove(summonedPlayer.getName());
+	public boolean acceptCall(Player calledPlayer) {
+		Date requestDate = this.callRequests.remove(calledPlayer.getName());
 		
 		if (requestDate != null) {
-			summonedPlayer.sendMessage(ChatColor.YELLOW + "Accepted summon request from " + this.player.getName() + ".");
-			this.player.sendMessage(ChatColor.YELLOW + summonedPlayer.getName() + " accepted your summon request.");
-			summonedPlayer.teleport(this.player);
+			calledPlayer.sendMessage(ChatColor.YELLOW + "Accepted call request from " + this.player.getName() + ".");
+			this.player.sendMessage(ChatColor.YELLOW + calledPlayer.getName() + " accepted your call request.");
+			calledPlayer.teleport(this.player);
 			return true;
 		}
 		
@@ -77,15 +77,15 @@ public class Traveler {
 	}
 	
 	public void clearRequests() {
-		int teleportRequestsCount = this.teleportRequests.size();
-		int summonRequestsCount   = this.summonRequests.size();
+		int gotoRequestsCount = this.gotoRequests.size();
+		int callRequestsCount = this.callRequests.size();
 		
-		if ((teleportRequestsCount + summonRequestsCount) == 0) {
+		if ((gotoRequestsCount + callRequestsCount) == 0) {
 			this.player.sendMessage(ChatColor.YELLOW + "You have no pending requests!");
 		} else {
-			this.player.sendMessage(ChatColor.YELLOW + "Cleared " + teleportRequestsCount + " teleport requests and " + summonRequestsCount + " summon requests.");
-			this.teleportRequests.clear();
-			this.summonRequests.clear();
+			this.player.sendMessage(ChatColor.YELLOW + "Cleared " + gotoRequestsCount + " goto requests and " + callRequestsCount + " call requests.");
+			this.gotoRequests.clear();
+			this.callRequests.clear();
 		}
 	}
 }

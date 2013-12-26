@@ -6,8 +6,8 @@ package net.nyvaria.fasttravel;
 import java.util.logging.Level;
 
 import net.nyvaria.fasttravel.commands.ClearRequestsCommand;
-import net.nyvaria.fasttravel.commands.SummonCommand;
-import net.nyvaria.fasttravel.commands.TeleportCommand;
+import net.nyvaria.fasttravel.commands.CallCommand;
+import net.nyvaria.fasttravel.commands.GotoCommand;
 import net.nyvaria.fasttravel.traveler.TravelerList;
 
 import org.bukkit.entity.Player;
@@ -18,15 +18,15 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  */
 public class FastTravel extends JavaPlugin {
-	public static String PERM_REQ_TELEPORT  = "fasttravel.request.teleport";
-	public static String PERM_REQ_SUMMON    = "fasttravel.request.summon";
+	public static String PERM_REQ_GOTO  = "fasttravel.request.goto";
+	public static String PERM_REQ_CALL    = "fasttravel.request.call";
 	public static String PERM_REQ_CLEAR_ALL = "fasttravel.request.clearall";
 
 	public  TravelerList          travelerList = null;
 	private FastTravelListener    listener     = null;
 	
-	private TeleportCommand       teleportCommand      = null;
-	private SummonCommand         summonCommand        = null;
+	private GotoCommand           gotoCommand          = null;
+	private CallCommand           callCommand          = null;
 	private ClearRequestsCommand  clearRequestsCommand = null;
 	
 	@Override
@@ -46,11 +46,11 @@ public class FastTravel extends JavaPlugin {
 		}
 
 		// Create and set the commands
-		this.teleportCommand = new TeleportCommand(this);
-		this.getCommand(TeleportCommand.CMD).setExecutor(this.teleportCommand);
+		this.gotoCommand = new GotoCommand(this);
+		this.getCommand(GotoCommand.CMD).setExecutor(this.gotoCommand);
 		
-		this.summonCommand = new SummonCommand(this);
-		this.getCommand(SummonCommand.CMD).setExecutor(this.summonCommand);
+		this.callCommand = new CallCommand(this);
+		this.getCommand(CallCommand.CMD).setExecutor(this.callCommand);
 		
 		this.clearRequestsCommand = new ClearRequestsCommand(this);
 		this.getCommand(ClearRequestsCommand.CMD).setExecutor(this.clearRequestsCommand);		
