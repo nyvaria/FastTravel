@@ -7,8 +7,8 @@ package net.nyvaria.fasttravel.traveler;
 import java.util.Date;
 import java.util.HashMap;
 
-import net.nyvaria.fasttravel.commands.CallCommand;
-import net.nyvaria.fasttravel.commands.GotoCommand;
+import net.nyvaria.fasttravel.commands.InviteCommand;
+import net.nyvaria.fasttravel.commands.VisitCommand;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,73 +19,73 @@ import org.bukkit.entity.Player;
  */
 public class Traveler {
 	private final Player player;
-	private HashMap<String, Date> gotoRequests = new HashMap<String, Date>();
-	private HashMap<String, Date> callRequests = new HashMap<String, Date>();
+	private HashMap<String, Date> invitations   = new HashMap<String, Date>();
+	private HashMap<String, Date> visitRequests = new HashMap<String, Date>();
 	
 	public Traveler(Player player) {
 		this.player = player;
 	}
 	
-	public void requestGoto(Player targetedPlayer) {
-		if (this.gotoRequests.containsKey(targetedPlayer.getName())) {
-			this.player.sendMessage(ChatColor.YELLOW + "Goto request already sent to " + targetedPlayer.getName());
-			this.player.sendMessage(ChatColor.YELLOW + "That player must type " + ChatColor.WHITE + "/" + CallCommand.CMD + " " + this.player.getName());
+	public void sendInvitation(Player visitingPlayer) {
+		if (this.invitations.containsKey(visitingPlayer.getName())) {
+			this.player.sendMessage(ChatColor.YELLOW + "Invitation to visit already sent to " + visitingPlayer.getName());
+			this.player.sendMessage(ChatColor.YELLOW + "That player must type " + ChatColor.WHITE + "/" + VisitCommand.CMD + " " + this.player.getName());
 		} else {
-			this.gotoRequests.put(targetedPlayer.getName(), new Date());
-			targetedPlayer.sendMessage(ChatColor.YELLOW + this.player.getName() + " would like to come to you.");
-			targetedPlayer.sendMessage(ChatColor.YELLOW + "Type " + ChatColor.WHITE + "/" + CallCommand.CMD + " " + this.player.getName() + ChatColor.YELLOW + " to accept.");
-			this.player.sendMessage(ChatColor.YELLOW + "Goto request sent to " + targetedPlayer.getName());
+			this.invitations.put(visitingPlayer.getName(), new Date());
+			visitingPlayer.sendMessage(ChatColor.YELLOW + this.player.getName() + " has invited you to visit them.");
+			visitingPlayer.sendMessage(ChatColor.YELLOW + "Type " + ChatColor.WHITE + "/" + VisitCommand.CMD + " " + this.player.getName() + ChatColor.YELLOW + " to accept.");
+			this.player.sendMessage(ChatColor.YELLOW + "Invitation to visit sent to " + visitingPlayer.getName());
 		}
 	}
 	
-	public void requestCall(Player calledPlayer) {
-		if (this.callRequests.containsKey(calledPlayer.getName())) {
-			this.player.sendMessage(ChatColor.YELLOW + "Call request already sent to " + calledPlayer.getName());
-			this.player.sendMessage(ChatColor.YELLOW + "That player must type " + ChatColor.WHITE + "/" + GotoCommand.CMD + " " + this.player.getName());
+	public void sendVisitRequest(Player hostingPlayer) {
+		if (this.visitRequests.containsKey(hostingPlayer.getName())) {
+			this.player.sendMessage(ChatColor.YELLOW + "Request to visit already sent to " + hostingPlayer.getName());
+			this.player.sendMessage(ChatColor.YELLOW + "That player must type " + ChatColor.WHITE + "/" + InviteCommand.CMD + " " + this.player.getName());
 		} else {
-			this.callRequests.put(calledPlayer.getName(), new Date());
-			calledPlayer.sendMessage(ChatColor.YELLOW + this.player.getName() + " would like you to come to them.");
-			calledPlayer.sendMessage(ChatColor.YELLOW + "Type " + ChatColor.WHITE + "/" + GotoCommand.CMD + " " + this.player.getName() + ChatColor.YELLOW + " to accept.");
-			this.player.sendMessage(ChatColor.YELLOW + "Call request sent to " + calledPlayer.getName());
+			this.visitRequests.put(hostingPlayer.getName(), new Date());
+			hostingPlayer.sendMessage(ChatColor.YELLOW + this.player.getName() + " would like to visit you.");
+			hostingPlayer.sendMessage(ChatColor.YELLOW + "Type " + ChatColor.WHITE + "/" + InviteCommand.CMD + " " + this.player.getName() + ChatColor.YELLOW + " to let them come.");
+			this.player.sendMessage(ChatColor.YELLOW + "Request to visit sent to " + hostingPlayer.getName());
 		}
 	}
 	
-	public boolean acceptGoto(Player targetedPlayer) {
-	    Date requestDate = this.gotoRequests.remove(targetedPlayer.getName());
-	    
-	    if (requestDate != null) {
-	    	targetedPlayer.sendMessage(ChatColor.YELLOW + "Accepted goto request from " + this.player.getName() + ".");
-	    	this.player.sendMessage(ChatColor.YELLOW + targetedPlayer.getName() + " accepted your goto request.");
-	    	this.player.teleport(targetedPlayer);
-	    	return true;
-	    }
-	    
-	    return false;
-	}
-	
-	public boolean acceptCall(Player calledPlayer) {
-		Date requestDate = this.callRequests.remove(calledPlayer.getName());
+	public boolean acceptInvitation(Player visitingPlayer) {
+		Date requestDate = this.invitations.remove(visitingPlayer.getName());
 		
 		if (requestDate != null) {
-			calledPlayer.sendMessage(ChatColor.YELLOW + "Accepted call request from " + this.player.getName() + ".");
-			this.player.sendMessage(ChatColor.YELLOW + calledPlayer.getName() + " accepted your call request.");
-			calledPlayer.teleport(this.player);
+			visitingPlayer.sendMessage(ChatColor.YELLOW + "You have accepted an invitation to visit from " + this.player.getPlayerListName() + ".");
+	    	this.player.sendMessage(ChatColor.YELLOW + visitingPlayer.getPlayerListName() + " has accepted your invitation to visit.");
+			visitingPlayer.teleport(this.player);
 			return true;
 		}
 		
 		return false;
 	}
 	
+	public boolean acceptVisitRequest(Player hostingPlayer) {
+	    Date requestDate = this.visitRequests.remove(hostingPlayer.getName());
+	    
+	    if (requestDate != null) {
+	    	hostingPlayer.sendMessage(ChatColor.YELLOW + "You have agreed to let " + this.player.getPlayerListName() + " visit.");
+			this.player.sendMessage(ChatColor.YELLOW + hostingPlayer.getPlayerListName() + " has agreed to let you visit.");
+	    	this.player.teleport(hostingPlayer);
+	    	return true;
+	    }
+	    
+	    return false;
+	}
+	
 	public void clearRequests() {
-		int gotoRequestsCount = this.gotoRequests.size();
-		int callRequestsCount = this.callRequests.size();
+		int visitRequestsCount = this.visitRequests.size();
+		int invitationsCount   = this.invitations.size();
 		
-		if ((gotoRequestsCount + callRequestsCount) == 0) {
+		if ((visitRequestsCount + invitationsCount) == 0) {
 			this.player.sendMessage(ChatColor.YELLOW + "You have no pending requests!");
 		} else {
-			this.player.sendMessage(ChatColor.YELLOW + "Cleared " + gotoRequestsCount + " goto requests and " + callRequestsCount + " call requests.");
-			this.gotoRequests.clear();
-			this.callRequests.clear();
+			this.player.sendMessage(ChatColor.YELLOW + "Cleared " + invitationsCount + " invitations and " + visitRequestsCount + " requests to visit.");
+			this.invitations.clear();
+			this.visitRequests.clear();
 		}
 	}
 }

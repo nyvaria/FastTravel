@@ -6,12 +6,12 @@ author: captbunzo
 main: net.nyvaria.fasttravel.FastTravel
 
 commands:
-  goto:
-    description: This is the goto command (formerly /teleport).
+  invite:
+    description: This is the invite command (formerly /summon).
     usage: /<command> [player]
   
-  call:
-    description: This is the call command (formerly /summon).
+  visit:
+    description: This is the visit command (formerly /teleport).
     usage: /<command> [player]
   
   clearrequests:
@@ -24,16 +24,16 @@ permissions:
   fasttravel.*:
     description: Gives access to all FastTravel commands
     children:
-      fasttravel.goto:          true
-      fasttravel.call:          true
+      fasttravel.invite:        true
+      fasttravel.visit:         true
       fasttravel.clearrequests: true
     
-  fasttravel.request.goto:
-    description: Allows you to initiate a goto (teleport) request
+  fasttravel.request.visit:
+    description: Allows you to request to visit someone
     default: op
     
-  fasttravel.request.call:
-    description: Allows you to call initiate a call (summon) request
+  fasttravel.request.invite:
+    description: Allows you to extend an initiatation to another player to visit
     default: op
     
   fasttravel.request.clearall:

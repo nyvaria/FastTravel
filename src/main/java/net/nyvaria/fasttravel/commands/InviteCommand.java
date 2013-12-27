@@ -19,11 +19,11 @@ import org.bukkit.entity.Player;
  * @author Paul Thompson
  *
  */
-public class GotoCommand implements CommandExecutor, TabCompleter {
-	public static String CMD = "goto";
+public class InviteCommand implements CommandExecutor, TabCompleter {
+	public static String CMD = "invite";
 	private final FastTravel plugin;
-	
-	public GotoCommand(FastTravel plugin) {
+
+	public InviteCommand(FastTravel plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -41,40 +41,40 @@ public class GotoCommand implements CommandExecutor, TabCompleter {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// Make sure we have a Player
 		if ( !(sender instanceof Player) ) {
-			sender.sendMessage("You must be a player to use /" + GotoCommand.CMD);
+			sender.sendMessage("You must be a player to use /" + InviteCommand.CMD);
 			return false;
 		}
 		
 		Player player = (Player) sender;
-	    //this.plugin.log(player.getName() + " running: /" + label + " " + PluginHelper.join(args));
-	    
+		//this.plugin.log(player.getName() + " running: /" + label + " " + PluginHelper.join(args));
+		
 	    if (args.length != 1) {
 	    	return false;
 	    }
 	    
-	    String targetedPlayerName = args[0];
-	    List<Player> matchedPlayers = plugin.getServer().matchPlayer(targetedPlayerName);
+	    String invitedPlayerName = args[0];
+	    List<Player> matchedPlayers = this.plugin.getServer().matchPlayer(invitedPlayerName);
 	    
 	    if (matchedPlayers.size() > 1) {
-	    	player.sendMessage(ChatColor.WHITE + targetedPlayerName + ChatColor.YELLOW + " matches more then one online player");
+	    	player.sendMessage(ChatColor.WHITE + invitedPlayerName + ChatColor.YELLOW + " matches more then one online player");
 	    	return false;
-	      
+	    	
 	    } else if (matchedPlayers.size() == 0) {
-	    	player.sendMessage(ChatColor.WHITE + targetedPlayerName + ChatColor.YELLOW + " does not appear to be an online player");
+	    	player.sendMessage(ChatColor.WHITE + invitedPlayerName + ChatColor.YELLOW + " does not appear to be an online player");
 	    	return false;
 	    }
 	    
-	    Player targetedPlayer = matchedPlayers.get(0);
-	    if (this.plugin.travelerList.get(targetedPlayer).acceptCall(player)) {
+	    Player invitedPlayer = matchedPlayers.get(0);
+	    if (this.plugin.travelerList.get(invitedPlayer).acceptVisitRequest(player)) {
+	      return true;
+	    }
+	    
+	    if (player.hasPermission(FastTravel.PERM_REQ_INVITE)) {
+	    	this.plugin.travelerList.get(player).sendInvitation(invitedPlayer);
 	    	return true;
 	    }
 	    
-	    if (player.hasPermission(FastTravel.PERM_REQ_GOTO)) {
-	    	this.plugin.travelerList.get(player).requestGoto(targetedPlayer);
-	    	return true;
-	    }
-	    
-	    player.sendMessage(ChatColor.RED + "You are not allowed to request to goto another player");
+	    player.sendMessage(ChatColor.RED + "You are not allowed to invite another player to visit you");
 	    return false;
 	}
 

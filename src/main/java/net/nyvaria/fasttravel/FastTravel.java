@@ -6,8 +6,8 @@ package net.nyvaria.fasttravel;
 import java.util.logging.Level;
 
 import net.nyvaria.fasttravel.commands.ClearRequestsCommand;
-import net.nyvaria.fasttravel.commands.CallCommand;
-import net.nyvaria.fasttravel.commands.GotoCommand;
+import net.nyvaria.fasttravel.commands.InviteCommand;
+import net.nyvaria.fasttravel.commands.VisitCommand;
 import net.nyvaria.fasttravel.traveler.TravelerList;
 
 import org.bukkit.entity.Player;
@@ -18,15 +18,15 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  */
 public class FastTravel extends JavaPlugin {
-	public static String PERM_REQ_GOTO      = "fasttravel.request.goto";
-	public static String PERM_REQ_CALL      = "fasttravel.request.call";
+	public static String PERM_REQ_INVITE    = "fasttravel.request.invite";
+	public static String PERM_REQ_VISIT     = "fasttravel.request.visit";
 	public static String PERM_REQ_CLEAR_ALL = "fasttravel.request.clearall";
 
 	public  TravelerList          travelerList = null;
 	private FastTravelListener    listener     = null;
 	
-	private GotoCommand           gotoCommand          = null;
-	private CallCommand           callCommand          = null;
+	private InviteCommand         inviteCommand        = null;
+	private VisitCommand          visitCommand         = null;
 	private ClearRequestsCommand  clearRequestsCommand = null;
 	
 	@Override
@@ -46,13 +46,13 @@ public class FastTravel extends JavaPlugin {
 		}
 
 		// Create and set the commands
-		this.gotoCommand = new GotoCommand(this);
-		this.getCommand(GotoCommand.CMD).setExecutor(this.gotoCommand);
-		this.getCommand(GotoCommand.CMD).setTabCompleter(this.gotoCommand);
+		this.inviteCommand = new InviteCommand(this);
+		this.getCommand(InviteCommand.CMD).setExecutor(this.inviteCommand);
+		this.getCommand(InviteCommand.CMD).setTabCompleter(this.inviteCommand);
 		
-		this.callCommand = new CallCommand(this);
-		this.getCommand(CallCommand.CMD).setExecutor(this.callCommand);
-		this.getCommand(CallCommand.CMD).setTabCompleter(this.callCommand);
+		this.visitCommand = new VisitCommand(this);
+		this.getCommand(VisitCommand.CMD).setExecutor(this.visitCommand);
+		this.getCommand(VisitCommand.CMD).setTabCompleter(this.visitCommand);
 		
 		this.clearRequestsCommand = new ClearRequestsCommand(this);
 		this.getCommand(ClearRequestsCommand.CMD).setExecutor(this.clearRequestsCommand);		
