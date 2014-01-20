@@ -19,47 +19,36 @@
 /**
  * 
  */
-package net.nyvaria.fasttravel.traveler;
+package net.nyvaria.fasttravel.metrics;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.logging.Level;
 
-import org.bukkit.entity.Player;
+import org.mcstats.Metrics;
 
-/*
+import net.nyvaria.fasttravel.FastTravel;
+
+/**
  * @author Paul Thompson
  *
  */
-public class TravelerList {
-	private HashMap<Player, Traveler> list;
+public class MetricsHandler {
+	private static final String METRICS_URL = "http://mcstats.org/plugin/FastTravel";
+	private final FastTravel plugin;
+	
+	public MetricsHandler(FastTravel plugin) {
+		this.plugin = plugin;
+	}
+	
+	public void run() {
+		try {
+			Metrics metrics = new Metrics(plugin);
+			metrics.start();
+			this.plugin.log("Metrics started: " + METRICS_URL);
+		} catch (IOException e) {
+			this.plugin.log(Level.WARNING, "Failed to start metrics");
+			e.printStackTrace();
+		}
+	}
 
-	public TravelerList() {
-		this.list = new HashMap<Player, Traveler>();
-	}
-	
-	public void put(Player player) {
-		if (!this.list.containsKey(player)) {
-			Traveler traveler = new Traveler(player);
-			this.list.put(player, traveler);
-		}
-	}
-	
-	public void remove(Player player) {
-		if (this.list.containsKey(player)) {
-			this.list.remove(player);
-		}
-	}
-	
-	public Traveler get(Player player) {
-		Traveler traveler = null;
-		
-		if (this.list.containsKey(player)) {
-			traveler = this.list.get(player);
-		}
-		
-		return traveler;
-	}
-	
-	public void clear() {
-		this.list.clear();
-	}
 }

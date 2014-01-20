@@ -2,11 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>net.nyvaria</groupId>
 	<artifactId>FastTravel</artifactId>
-	<version>1.1.2</version>
+	<version>1.2.01</version>
+	
 	<name>FastTravel</name>
 	<url>https://github.com/nyvaria/FastTravel</url>
 	<description>A fast travel plugin for Bukkit.</description>
@@ -54,6 +55,10 @@
 			<id>vault-repo</id>
 			<url>http://ci.herocraftonline.com/plugin/repository/everything</url>
 		</repository>
+		<repository>
+			<id>Plugin Metrics</id>
+			<url>http://repo.mcstats.org/content/repositories/public</url>
+		</repository>
 	</repositories>
 	
 	<dependencies>
@@ -62,6 +67,12 @@
 			<artifactId>bukkit</artifactId>
 			<version>1.7.2-R0.2</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mcstats.bukkit</groupId>
+			<artifactId>metrics</artifactId>
+			<version>R7</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 	
@@ -81,12 +92,14 @@
 					<include>plugin.yml</include>
 				</includes>
 			</resource>
-			
 			<resource>
 				<targetPath>.</targetPath>
 				<filtering>false</filtering>
 				<directory>${basedir}/src/main/resources/</directory>
 				<includes>
+					<include>README.md</include>
+					<include>CHANGELOG.md</include>
+					<include>LICENSE</include>
 					<include>config.yml</include>
 				</includes>
 			</resource>

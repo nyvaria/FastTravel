@@ -1,1 +1,6 @@
-# Nothing here yet
+#
+# FastTravel Configuration
+#
+
+use-metrics: true
+
