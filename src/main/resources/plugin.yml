@@ -33,7 +33,7 @@ permissions:
     default: op
     
   fasttravel.request.invite:
-    description: Allows you to extend an initiatation to another player to visit
+    description: Allows you to extend an invitation to another player to visit
     default: op
     
   fasttravel.request.clearall:

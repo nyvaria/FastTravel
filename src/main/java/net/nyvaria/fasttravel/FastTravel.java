@@ -37,46 +37,44 @@ public class FastTravel extends NyvariaPlugin {
     public static String PERM_REQ_VISIT     = "fasttravel.request.visit";
     public static String PERM_REQ_CLEAR_ALL = "fasttravel.request.clearall";
 
-    // Traveler list and listener and metrics
-    private TravelerList travelerList = null;
-    private FastTravelListener listener = null;
-
-    // Commands
-    private InviteCommand        cmdInvite = null;
-    private VisitCommand         cmdVisit = null;
-    private ClearRequestsCommand cmdClearRequests = null;
+    // Traveler listener and list
+    private FastTravelListener listener     = null;
+    private TravelerList       travelerList = null;
 
     @Override
     public void onEnable() {
         // Initialise or update the configuration
-        this.saveDefaultConfig();
-        this.getConfig().options().copyDefaults(true);
+        saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
 
         // Initialise optional hooks
         MetricsHook.enable(this);
 
         // Create an empty traveler list and add all currently logged in players
-        this.travelerList = new TravelerList();
-        for (Player player : this.getServer().getOnlinePlayers()) {
-            this.travelerList.put(player);
+        travelerList = new TravelerList();
+        for (Player player : getServer().getOnlinePlayers()) {
+            travelerList.put(player);
         }
 
         // Create and register the listener
-        this.listener = new FastTravelListener(this);
+        listener = new FastTravelListener(this);
 
-        // Create and set the commands
-        this.cmdInvite        = new InviteCommand(this);
-        this.cmdVisit         = new VisitCommand(this);
-        this.cmdClearRequests = new ClearRequestsCommand(this);
+        // Create the commands
+        InviteCommand        cmdInvite        = new InviteCommand(this);
+        VisitCommand         cmdVisit         = new VisitCommand(this);
+        ClearRequestsCommand cmdClearRequests = new ClearRequestsCommand(this);
 
-        this.getCommand(InviteCommand.CMD).setExecutor(this.cmdInvite);
-        this.getCommand(InviteCommand.CMD).setTabCompleter(this.cmdInvite);
-        this.getCommand(VisitCommand.CMD).setExecutor(this.cmdVisit);
-        this.getCommand(VisitCommand.CMD).setTabCompleter(this.cmdVisit);
-        this.getCommand(ClearRequestsCommand.CMD).setExecutor(this.cmdClearRequests);
+        // Set the command executors
+        getCommand(InviteCommand.CMD).setExecutor(cmdInvite);
+        getCommand(VisitCommand.CMD).setExecutor(cmdVisit);
+        getCommand(ClearRequestsCommand.CMD).setExecutor(cmdClearRequests);
+
+        // Set the command tab completers
+        getCommand(InviteCommand.CMD).setTabCompleter(cmdInvite);
+        getCommand(VisitCommand.CMD).setTabCompleter(cmdVisit);
 
         // Print a lovely message
-        this.log("Enabling %1$s successful", this.getNameAndVersion());
+        log("Enabling %1$s successful", getNameAndVersion());
     }
 
     @Override
@@ -84,11 +82,12 @@ public class FastTravel extends NyvariaPlugin {
         // Disable the hooks
         MetricsHook.disable();
 
-        // Destroy the traveler list
-        this.travelerList = null;
+        // Destroy the listener and traveler list
+        listener     = null;
+        travelerList = null;
 
         // Print a lovely message
-        this.log("Disabling %s successful", this.getNameAndVersion());
+        log("Disabling %s successful", getNameAndVersion());
     }
 
     /**
